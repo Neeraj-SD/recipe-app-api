@@ -1,7 +1,9 @@
 """
 Views for the recipe API.
 """
-from django.shortcuts import render
+# from drf_spectacular.utils import (
+
+# )
 from rest_framework import (
     viewsets,
     mixins,
@@ -28,6 +30,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    def _params_to_ints(self, qs):
+        """Convert a list of strings to integers."""
+
+        return [int(str_id) for str_id in qs.split(',')]
+
     def get_serializer_class(self):
         """Return the serializer class for request."""
         if self.action == 'list':
@@ -40,6 +47,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Retrieve recipes for authenticated users."""
+        tags = self.request.query_params.get('tags')
+        ingredients = self.request.query_params('ingredients')
         return self.queryset.filter(user=self.request.user).order_by('-id')
 
     def perform_create(self, serializer):
