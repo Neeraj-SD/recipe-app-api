@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from core import views as core_views
+from uploader import views as uploader_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +36,7 @@ urlpatterns = [
     ),
     path('api/user/', include('user.urls')),
     path('api/recipe/', include('recipe.urls')),
+    path('api/file-upload', uploader_views.UploadView.as_view(), name='fileupload'),
 ]
 
 if settings.DEBUG:
